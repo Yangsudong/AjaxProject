@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>employeeList.html</title>
+<style>
+		table {
+			border-collapse: collapse;
+			width: 80%;
+		}
+		td,
+		th {
+			border: 1px solid #dddddd;
+			text-align: left;
+			padding: 5px;
+		}
+		th {
+			background-color: lightblue;
+		}
+		tr:nth-child(odd) {
+			background-color: #dddddd;
+		}
+</style>
+<script src="jquery-3.5.1.min.js"></script>
+<script>
+	$(document).ready(function(){
+		$.ajax({
+			url : "GetEmpServlet",
+			success : function(result, status, xhr) {
+				// console.log(result);	
+				var data = JSON.parse(result);
+				// console.log(data);
+				// document.write("<h2> ID :" + data[0].id + "</h2>");
+				// document.write("<h2> FName :" + data[0].frist_name + "</h2>");
+				// document.write("<h2> Age :" + data[0].age + "</h2>");
+				
+				 var $table = $('<table />').attr({'border':'1', 'id':'tb1'});   
+		         var $tr = $('<tr />');
+		                $tr.append($('<th />').text('ID'),
+		                $('<th />').text('FName'),
+		                $('<th />').text('LName'),
+		                $('<th />').text('Salary'),
+		                $('<th />').text('삭제')                
+		            );
+		            $table.append($tr);
+		                  
+		            var $tr = $('<tr />');
+		            data.forEach(function(o) {
+		                $tr = $('<tr />').mouseenter(mouseenterFunc)
+		                                 .mouseleave(mouseleaveFunc);         
+		                    
+		                    for(i in o) {
+		                        $tr.append($('<td />').text(o[i]));
+		                    }
+		                
+		                $tr.append($('<button>Click</button>').click(clickFunc));
+
+		                $table.append($tr);
+		            });
+		            $('#show').append($table);
+		        
+		        function mouseenterFunc() {
+		            $(this).css('background','lightyellow');
+		        }
+		        function mouseleaveFunc() {
+		            $(this).css('background','');
+		        }
+		        function clickFunc() {
+		            $(this).parent().hide();
+		        }
+			}
+		});
+	});
+	
+	
+</script>
+</head>
+<body>
+	<p id="show"></p>	
+</body>
+</html>
