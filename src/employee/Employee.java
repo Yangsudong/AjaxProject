@@ -2,17 +2,18 @@ package employee;
 
 public class Employee {
 	int employeeId;
-	String firstName;
+	String firstName; 
 	String lastName;
 	String email;
 	int salary;
 	String hireDate;
 	String jobId;
 	
-	public Employee(int employeeId, String firstName, String email, int salary) {
+	public Employee(int employeeId, String firstName, String lastName, String email, int salary) {
 		super();
 		this.employeeId = employeeId;
 		this.firstName = firstName;		
+		this.lastName = lastName;
 		this.email = email;
 		this.salary = salary;
 	}
@@ -24,6 +25,11 @@ public class Employee {
 		this.email = email;
 		this.hireDate = hireDate;
 		this.jobId = jobId;
+	}
+
+
+	public Employee() {
+		
 	}
 
 

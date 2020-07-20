@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>employeeList2.html</title>
+<style>
+		table {
+			border-collapse: collapse;
+			width: 80%;
+		}
+		td,
+		th {
+			border: 1px solid #dddddd;
+			text-align: left;
+			padding: 5px;
+		}
+		th {
+			background-color: lightblue;
+		}
+		tr:nth-child(odd) {
+			background-color: #dddddd;
+		}
+</style>
+<script src="jquery-3.5.1.min.js"></script>
+<script>
+	$(document).ready(function(){
+		$.ajax({
+			url : "GetEmpServlet",
+			success : function(result, status, xhr) {
+				// console.log(result);	
+				var data = JSON.parse(result);
+				// console.log(data);
+				// document.write("<h2> ID :" + data[0].id + "</h2>");
+				// document.write("<h2> FName :" + data[0].frist_name + "</h2>");
+				// document.write("<h2> Age :" + data[0].age + "</h2>");
+				
+				 var $table = $('<table />').attr({'border':'1', 'id':'tb1'});   
+		         var $tr = $('<tr />');
+		                $tr.append($('<th />').text('ID'),
+		                $('<th />').text('FName'),
+		                $('<th />').text('Email'),
+		                $('<th />').text('Salary'),
+		                $('<th />').text('삭제')                
+		            );
+		            $table.append($tr);
+		                  
+		            var $tr = $('<tr />');
+		            data.forEach(function(o) {
+		                $tr = $('<tr />').mouseenter(mouseenterFunc)
+		                                 .mouseleave(mouseleaveFunc);         
+		                    
+		                    for(i in o) {
+		                        $tr.append($('<td />').text(o[i]));		                        
+		                    }
+		                    
+		                
+		                $tr.append($('<button >Click</button>').click(delfunc));
+
+		                $table.append($tr);
+		            });
+		            $('#show').append($table);
+		        
+		        function mouseenterFunc() {
+		            $(this).css('background','lightyellow');
+		        }
+		        function mouseleaveFunc() {
+		            $(this).css('background','');
+		        }
+		        
+		        function delfunc(obj) {
+		        	console.log($(this).parent().children().eq(0).text());
+		        	var eid = $(this).parent().children().eq(0).text();
+		        	$(this).parent().remove();
+		    		$.ajax({ 
+		    			url: "DelEmpServlet",
+		    			data: {"eid": eid, "salary": 0 }, // "eid="+eid,
+		    			success: function(result, stauts) {
+		    				console.log(status);
+		    			}
+		    		});
+		        }
+		        function valueUpdate(){
+		        	console.log($(this).val());
+		        	console.log($(this).parent().parent().children().eq(0).text());
+		        	var curSalary = $(this).val();
+		        	var curEmpId = $(this).parent().parent().children().eq(0).text();
+		        	$.ajax({ 
+		    			url: "UpdateEmpServlet",
+		    			data:{"empId": curEmpId, "salary": curSalary},
+		    			success: function(result, status) {
+		    				console.log(status);
+		    			}
+		    		});
+		        }
+		        
+		        function changeFunc(obj) {
+		        	var curValue = obj.childNodes[0].nodeValue;
+		        	var $input = $('<input />').attr('value', curValue);
+		        	$input.on('change', valueUpdate);
+		        	$(obj).append($input);
+		        	obj.childNodes[0].nodeValue = "";
+		        }
+		        
+		        
+		        function clickFunc() {
+		            $(this).parent().hide();
+		        } 
+		        
+			}
+		});
+	});
+	
+	
+</script>
+</head>
+<body>
+	<p id="show"></p>	
+</body>
+</html>
